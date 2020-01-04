@@ -18,6 +18,7 @@ from sklearn.svm import SVR
 Constants:
 '''
 dataframe = pd.read_csv('Alasca_nordeste.csv', sep=';')
+macroeconomia = pd.read_csv('macroeconomia.csv', sep=';')
 
 
 '''
@@ -49,7 +50,7 @@ def format_sales_column(data):
 
 
 
-def divide_sales_by_year(year):
+def group_sales_by_year(year):
     '''
     - year should be an integer
     - sales_type = sm, total, indiretos or route
@@ -62,12 +63,14 @@ def divide_sales_by_year(year):
 
 
 def group_year_sales_by_month(year, sales_type):
+    year = int(year)
     '''
-        Returns a numpy array with the sales of a given type of a given yeay grouped
+        - year should be given as integer
+        - Returns a numpy array with the sales of a given type of a given yeay grouped
         by month
     '''
 
-    df = divide_sales_by_year(year)
+    df = group_sales_by_year(year)
     max_month = int(np.array(df['Month_gregoriano'])[np.array(df['Month_gregoriano']).size - 1])
 
     m_sales = []
@@ -83,13 +86,14 @@ def group_year_sales_by_month(year, sales_type):
     return m_sales
 
 
+
 def plot_sales(df = dataframe, year=None, sm = True, total = True, route = True, indiretos = True):
     '''
     -Choose wich channels should be ploted. Default plots all channels
-    -Choose year (should be an integer). Default shows all years
+    -Choose year (should be an integer). Default show all years
     '''
     if year != None:
-        df = divide_sales_by_year(year)
+        df = group_sales_by_year(year)
     if total:
         total_sales = format_sales_column(df['Total'])
     if sm:
@@ -110,7 +114,7 @@ def plot_sales(df = dataframe, year=None, sm = True, total = True, route = True,
 
 '''
 ---------------------------------------------
------------ Data analysis functios ----------
+----------- Data analysis functions ----------
 ---------------------------------------------
 '''
 
@@ -119,14 +123,14 @@ def train_rbf_estimator(traning_year):
     Treina o modelo no ano de 2017 e tenta prever as vendas de 2018 da forma mais simples possivel
     '''
 
-    df = divide_sales_by_year(traning_year)
+    df = group_sales_by_year(traning_year)
 
     weeks = np.linspace(0, np.array(df["Total"]).size,np.array(df["Total"]).size)
     weeks = np.reshape(weeks,(len(weeks), 1))
     sales =  format_sales_column(df['Total'])
 
     #TODO how to adjust the radial basis function parameters ?
-    svr_rbf = SVR(kernel= 'rbf', C= 1e10, gamma= 0.01) # defining the support vector regression models
+    svr_rbf = SVR(kernel= 'rbf', C= 1e10, gamma= 0.01)
     svr_rbf.fit(weeks, sales)
 
     plt.plot(weeks, sales, color= 'black', label= 'Data')
@@ -134,13 +138,40 @@ def train_rbf_estimator(traning_year):
 
     plt.show()
 
+def plot_sales_and_macro(year):
+    '''
+        - Year should be given as a String
+    '''
+    df = macroeconomia[macroeconomia['Data'].str.contains(year)]
 
-train_rbf_estimator(2017)
+    #TODO: encapsular as funcoes e tirar as variaveis que eu coloquei direto na mao
 
-#df = divide_sales_by_year(2017)
-#sales =  format_sales_column(df['Total'])
-#plt.plot(sales)
-#plt.show()
+    fig, ax1 = plt.subplots()
+    months  = np.linspace(1, 12, 12) #one year divded
+
+    #gotta format the data
+    dataset = []
+    for i in np.array(df['PMC']):
+        dataset.append(float(i.replace(',', '.')))
+
+
+    ax1.set_xlabel('Months')
+    ax1.set_ylabel('PMC', color='red')
+    ax1.plot(months, dataset, color='red')
+
+    ax1.tick_params(axis='y', labelcolor='red')
+
+    ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+
+    #get sales for a given year
+    sales = group_year_sales_by_month(year, "Total")
+
+    ax2.set_ylabel('sales', color='blue')  # we already handled the x-label with ax1
+    ax2.plot(months, sales, color='blue')
+    ax2.tick_params(axis='y', labelcolor='blue')
+
+    fig.tight_layout()  # otherwise the right y-label is slightly clipped
+    plt.show()
 
 
 
@@ -148,3 +179,13 @@ train_rbf_estimator(2017)
 '''
 Tests
 '''
+
+plot_sales_and_macro('2015')
+
+#train_rbf_estimator(2017)
+
+#df = group_sales_by_year(2017)
+#sales =  format_sales_column(df['Total'])
+#plt.plot(sales)
+#plt.show()
+
