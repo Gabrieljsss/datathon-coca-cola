@@ -130,13 +130,15 @@ def train_rbf_estimator(traning_year):
     sales =  format_sales_column(df['Total'])
 
     #TODO how to adjust the radial basis function parameters ?
-    svr_rbf = SVR(kernel= 'rbf', C= 1e10, gamma= 0.01)
+    svr_rbf = SVR(kernel= 'rbf', C= 1e11, gamma= 0.01)
     svr_rbf.fit(weeks, sales)
 
     plt.plot(weeks, sales, color= 'black', label= 'Data')
     plt.plot(weeks, svr_rbf.predict(weeks), color= 'red', label= 'RBF model') # plotting the line made by the RBF kernel
 
     plt.show()
+
+train_rbf_estimator(2015)
 
 def plot_sales_and_macro(year):
     '''
@@ -180,7 +182,6 @@ def plot_sales_and_macro(year):
 Tests
 '''
 
-plot_sales_and_macro('2015')
 
 #train_rbf_estimator(2017)
 
