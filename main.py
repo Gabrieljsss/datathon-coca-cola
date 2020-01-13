@@ -175,9 +175,6 @@ def plot_sales_and_macro(year):
     fig.tight_layout()  # otherwise the right y-label is slightly clipped
     plt.show()
 
-
-
-
 '''
 Tests
 '''
