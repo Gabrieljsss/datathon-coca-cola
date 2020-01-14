@@ -8,3 +8,8 @@
 -> Composer para versionamento
 -> Estudar as funções de predição (RBF foi a implementada)
 -> GRANDE QUESTÃO: como adicionar fatores socias ao modelo preditivo?
+
+#TODO2
+-> Procurar Base de Dados (a que achar interessante)
+-> Como fazer predição efetivamente (perguntar)
+-> Como avaliar um modelo (5%) (perguntar)
