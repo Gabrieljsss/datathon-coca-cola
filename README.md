@@ -13,3 +13,7 @@
 -> Procurar Base de Dados (a que achar interessante)
 -> Como fazer predição efetivamente (perguntar)
 -> Como avaliar um modelo (5%) (perguntar)
+    Sobre avaliação de modelos acho que pode ser interessante:
+        https://support.minitab.com/pt-br/minitab/18/help-and-how-to/modeling-statistics/regression/how-to/fit-regression-model/interpret-the-results/key-results/
+        https://www.youtube.com/watch?v=7o7Z1RSA3ac
+        https://indatalabs.com/blog/predictive-models-performance-evaluation-important?cli_action=1579109851.489
