@@ -12,10 +12,11 @@ def format_sale_string(value):
     value = value.replace(',', '.')
     return float(value)
 
-X = dataset[['Ajuste_ipca','PMC']]
+X = dataset[['Month','PMC']]
 y = dataset[['sum_Total']]
-X['Ajuste_ipca'] = X['Ajuste_ipca'].apply(format_sale_string)
+
 X['PMC'] = X['PMC'].apply(format_sale_string)
+
 y['sum_Total'] = y['sum_Total'].apply(format_sale_string)
 
 from sklearn.model_selection import train_test_split
@@ -29,8 +30,10 @@ y_pred = regressor.predict(X_test)
 
 from sklearn.metrics import r2_score
 score=r2_score(y_test,y_pred)
-
-plt.scatter(y_test, y_pred,  color='black')
+print(score)
+#plt.scatter(y_test, y_pred,  color='black')
+residuals = y_test - y_pred
+plt.scatter(y_pred, residuals, color='black') #Residual plot
 
 plt.xticks(())
 plt.yticks(())
